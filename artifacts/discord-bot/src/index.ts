@@ -23,7 +23,7 @@ const distube = new DisTube(client, {
   plugins: [new YtDlpPlugin({ update: false })],
 });
 
-client.once("ready", () => {
+client.once("clientReady", () => {
   console.log(`✅ Bot connecté en tant que ${client.user?.tag}`);
   console.log(`🎵 Préfixe : ${PREFIX}`);
 });
