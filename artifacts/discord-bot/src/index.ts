@@ -21,6 +21,7 @@ const client = new Client({
 
 const distube = new DisTube(client, {
   plugins: [new YtDlpPlugin({ update: false })],
+  volume: 100,
 });
 
 client.once("clientReady", () => {
