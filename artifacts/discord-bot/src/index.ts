@@ -8,7 +8,7 @@ import {
 import { DisTube } from "distube";
 import { YtDlpPlugin } from "@distube/yt-dlp";
 
-const PREFIX = "!";
+const PREFIX = "+";
 
 const client = new Client({
   intents: [
