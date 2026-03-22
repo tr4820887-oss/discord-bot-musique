@@ -7,6 +7,7 @@ import {
 } from "discord.js";
 import { DisTube } from "distube";
 import { YtDlpPlugin } from "@distube/yt-dlp";
+import { joinVoiceChannel, VoiceConnectionStatus, entersState } from "@discordjs/voice";
 
 const PREFIX = "+";
 
@@ -58,6 +59,32 @@ client.on("messageCreate", async (message: Message) => {
           return;
         }
         await message.react("🔍");
+
+        // Test de connexion voix avant de lancer DisTube
+        console.log(`[VOICE] Tentative de connexion au salon: ${voiceChannel.name} (${voiceChannel.id})`);
+        try {
+          const testConn = joinVoiceChannel({
+            channelId: voiceChannel.id,
+            guildId: voiceChannel.guild.id,
+            adapterCreator: voiceChannel.guild.voiceAdapterCreator,
+            selfDeaf: false,
+          });
+          await entersState(testConn, VoiceConnectionStatus.Ready, 30_000);
+          console.log(`[VOICE] Connexion réussie !`);
+          testConn.destroy();
+        } catch (connErr) {
+          const e = connErr as Error;
+          console.error(`[VOICE] Échec connexion UDP: ${e.message}`);
+          await message.reply(
+            "❌ **Impossible de rejoindre le salon vocal.**\n" +
+            "Vérifie que :\n" +
+            "• Le bot a les permissions **Connexion** et **Parler** dans le salon\n" +
+            "• Tu es bien dans un salon vocal\n" +
+            "• Le bot est publié (déployé) et non en mode développement"
+          );
+          return;
+        }
+
         await distube.play(voiceChannel, query, {
           message,
           textChannel: message.channel as TextChannel,
