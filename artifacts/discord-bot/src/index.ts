@@ -21,7 +21,6 @@ const client = new Client({
 
 const distube = new DisTube(client, {
   plugins: [new YtDlpPlugin({ update: false })],
-  volume: 100,
 });
 
 client.once("clientReady", () => {
@@ -280,6 +279,7 @@ client.on("messageCreate", async (message: Message) => {
 });
 
 distube.on("playSong", (queue, song) => {
+  queue.setVolume(100);
   const embed = new EmbedBuilder()
     .setDescription(
       `🎵 **En train de jouer :** [${song.name}](${song.url})\n⏱️ Durée : \`${song.formattedDuration}\``
