@@ -7,7 +7,6 @@ import {
 } from "discord.js";
 import { DisTube } from "distube";
 import { YtDlpPlugin } from "@distube/yt-dlp";
-import { joinVoiceChannel, VoiceConnectionStatus, entersState } from "@discordjs/voice";
 import { createServer } from "http";
 
 const PREFIX = "+";
@@ -60,31 +59,7 @@ client.on("messageCreate", async (message: Message) => {
           return;
         }
         await message.react("🔍");
-
-        // Test de connexion voix avant de lancer DisTube
-        console.log(`[VOICE] Tentative de connexion au salon: ${voiceChannel.name} (${voiceChannel.id})`);
-        try {
-          const testConn = joinVoiceChannel({
-            channelId: voiceChannel.id,
-            guildId: voiceChannel.guild.id,
-            adapterCreator: voiceChannel.guild.voiceAdapterCreator,
-            selfDeaf: false,
-          });
-          await entersState(testConn, VoiceConnectionStatus.Ready, 30_000);
-          console.log(`[VOICE] Connexion réussie !`);
-          testConn.destroy();
-        } catch (connErr) {
-          const e = connErr as Error;
-          console.error(`[VOICE] Échec connexion UDP: ${e.message}`);
-          await message.reply(
-            "❌ **Impossible de rejoindre le salon vocal.**\n" +
-            "Vérifie que :\n" +
-            "• Le bot a les permissions **Connexion** et **Parler** dans le salon\n" +
-            "• Tu es bien dans un salon vocal\n" +
-            "• Le bot est publié (déployé) et non en mode développement"
-          );
-          return;
-        }
+        console.log(`[PLAY] Recherche: ${query} dans ${voiceChannel.name}`);
 
         await distube.play(voiceChannel, query, {
           message,
@@ -270,25 +245,25 @@ client.on("messageCreate", async (message: Message) => {
             {
               name: "🎵 Lecture",
               value:
-                "`!play <titre ou URL>` — Joue une musique\n" +
-                "`!pause` — Met en pause\n" +
-                "`!resume` — Reprend la lecture\n" +
-                "`!stop` — Arrête et vide la file\n" +
-                "`!skip` — Passe à la suivante",
+                "`+play <titre ou URL>` — Joue une musique\n" +
+                "`+pause` — Met en pause\n" +
+                "`+resume` — Reprend la lecture\n" +
+                "`+stop` — Arrête et vide la file\n" +
+                "`+skip` — Passe à la suivante",
             },
             {
               name: "📋 File d'attente",
               value:
-                "`!queue` — Affiche la file d'attente\n" +
-                "`!shuffle` — Mélange la file\n" +
-                "`!loop` — Active/désactive la répétition",
+                "`+queue` — Affiche la file d'attente\n" +
+                "`+shuffle` — Mélange la file\n" +
+                "`+loop` — Active/désactive la répétition",
             },
             {
               name: "⚙️ Paramètres",
               value:
-                "`!np` — Musique en cours\n" +
-                "`!volume <0-100>` — Règle le volume\n" +
-                "`!leave` — Déconnecte le bot",
+                "`+np` — Musique en cours\n" +
+                "`+volume <0-100>` — Règle le volume\n" +
+                "`+leave` — Déconnecte le bot",
             }
           )
           .setColor(0x5865f2)
