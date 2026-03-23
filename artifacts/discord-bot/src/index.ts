@@ -8,6 +8,7 @@ import {
 import { DisTube } from "distube";
 import { YtDlpPlugin } from "@distube/yt-dlp";
 import { joinVoiceChannel, VoiceConnectionStatus, entersState } from "@discordjs/voice";
+import { createServer } from "http";
 
 const PREFIX = "+";
 
@@ -353,3 +354,12 @@ if (!token) {
 }
 
 client.login(token);
+
+// Serveur HTTP minimal pour que Replit puisse héberger le bot
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+createServer((req, res) => {
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("🎵 Bot Musique en ligne !");
+}).listen(PORT, () => {
+  console.log(`🌐 Serveur HTTP actif sur le port ${PORT}`);
+});

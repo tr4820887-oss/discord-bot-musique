@@ -7,8 +7,8 @@ id = "artifacts/api-server"
 id = "artifacts/mockup-sandbox"
 
 [deployment]
-router = "application"
-deploymentTarget = "autoscale"
+deploymentTarget = "vm"
+run = ["pnpm", "--filter", "@workspace/discord-bot", "run", "start"]
 
 [deployment.postBuild]
 args = ["pnpm", "store", "prune"]
